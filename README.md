@@ -3,6 +3,13 @@
 ## Prediction based on Relevance Vector Machine (RVM), SB2_Release_200
 
 ---------------------------------------------------------
+Updated on 5 July 2019	
+1. Fixed some errors 
+2. Optimized the code
+3. Added some functions
+---------------------------------------------------------  
+
+---------------------------------------------------------
 Updated on 11 May 2019	
 1. Fixed some errors 
 2. Optimized the code
@@ -10,38 +17,33 @@ Updated on 11 May 2019
 ---------------------------------------------------------  
 
 ## demo: prediction for a numerical example by using RVM
+
 ```
 clc
 clear all
 close all
 addpath(genpath(pwd))
 
-% sinc funciton
-fun = @(x) sin(abs(x))/abs(x);
-
-% training samples
-x = linspace(-10,10,100);
-y = arrayfun(fun,x);
-Xtrain = x';
-Ytrain = y';
-
-% testing samples
-xtest = linspace(-10,10,30);
-ytest = arrayfun(fun,xtest);
-Xtest = xtest';
-Ytest = ytest';
+% Generate data
+[x, y, xt, yt] = generateData;
 
 % Train RVM model
-model = rvm_train(Xtrain,Ytrain,'sigma',5.5,'bias',1);
+model = rvm_train(x,y,'s',7,'b',0);
 
-% Test RVM model
-[y_mu,y_var] = rvm_test(model,Xtest);
+% Predict the training samples
+[y_mu,y_var] = rvm_test(model,x);
+
+% Predict the testing samples
+[yt_mu,yt_var] = rvm_test(model,xt);
 
 % Plot the training results 
-plottrainingResult(Xtrain,Ytrain,model)
+plottrainingResult(x,y,model)
 
 % Plot the testing results 
-plottestingResult(Xtest,Ytest,y_mu,y_var)
+plottestingResult(xt,yt,yt_mu,yt_var)
+
+% Compute regression performance evaluation index
+[RMSE,CD,MAE] = computePretIndex(yt,yt_mu);
 ```
 
 ![](img/img1.png)![](img/img2.png)  
