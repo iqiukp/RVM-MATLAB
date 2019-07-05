@@ -16,7 +16,7 @@ Updated on 11 May 2019
 3. Modified the function 'SparseBayes.m'
 ---------------------------------------------------------  
 
-## demo: prediction for a numerical example by using RVM
+## demo: Prediction for a numerical example using RVM
 
 ```
 clc
