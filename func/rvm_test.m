@@ -7,8 +7,8 @@ function [y_mu,y_var] = rvm_test(model,X)
 %       [y_mu,y_var] = rvm_test(model,X)
 %
 % INPUT
-%   X            Test samples (N*d)
-%                N: number of samples
+%   X            testing samples (n*d)
+%                n: number of samples
 %                d: number of features
 %   model        RVM model%
 %
@@ -17,14 +17,24 @@ function [y_mu,y_var] = rvm_test(model,X)
 %   y_var        variance of prediction
 %
 %
-% Created on 11st May 2019, by Kepeng Qiu.
+% Created on 5th July 2019, by Kepeng Qiu.
 %-------------------------------------------------------------%
 
 N = size(X,1);
-BASIS = computeKM(X,model.X,model.width);
+% Compute the kernel matrix
+K = computeKM(X,model.X,model.width);
+
+% Construct the basis vectors
+if ~model.bias
+    % No bias
+    BASIS = K;
+else
+    % Add bias
+    BASIS = [K,ones(N,1)];
+end
 
 % prediction
-y_mu = BASIS(:,model.rv_index)*model.rv_mu+model.bias;
+y_mu = BASIS(:,model.rv_index)*model.rv_mu;
 
 % variance of prediction
 y_var = ones(N,1)*model.beta^-1+ ... 
