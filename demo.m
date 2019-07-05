@@ -1,8 +1,8 @@
 %%%%%%%%%%      Relevance Vector Machine (RVM)              %%%%%%%%%%%%%%%
-% Demo: prediction for a numerical example by using RVM
-% Improve the performance by adjusting the following parameters:
-% 1. sigma   % kernel width
+% Demo: prediction for a numerical example using RVM
+% Improve the performance by adjusting the  kernel width
 %
+% Created on 5th July 2019, by Kepeng Qiu.
 % ---------------------------------------------------------------------%
 
 clc
@@ -10,29 +10,24 @@ clear all
 close all
 addpath(genpath(pwd))
 
-% sinc funciton
-fun = @(x) sin(abs(x))/abs(x);
-
-% training samples
-x = linspace(-10,10,100);
-y = arrayfun(fun,x);
-Xtrain = x';
-Ytrain = y';
-
-% testing samples
-xtest = linspace(-10,10,30);
-ytest = arrayfun(fun,xtest);
-Xtest = xtest';
-Ytest = ytest';
+% Generate data
+[x, y, xt, yt] = generateData;
 
 % Train RVM model
-model = rvm_train(Xtrain,Ytrain,'sigma',5.5,'bias',1);
+model = rvm_train(x,y,'s',7,'b',0);
 
-% Test RVM model
-[y_mu,y_var] = rvm_test(model,Xtest);
+% Predict the training samples
+[y_mu,y_var] = rvm_test(model,x);
+
+% Predict the testing samples
+[yt_mu,yt_var] = rvm_test(model,xt);
 
 % Plot the training results 
-plottrainingResult(Xtrain,Ytrain,model)
+plottrainingResult(x,y,model)
 
 % Plot the testing results 
-plottestingResult(Xtest,Ytest,y_mu,y_var)
+plottestingResult(xt,yt,yt_mu,yt_var)
+
+% Compute regression performance evaluation index
+[RMSE,CD,MAE] = computePretIndex(yt,yt_mu);
+
