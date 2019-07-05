@@ -7,8 +7,6 @@ Updated on 5 July 2019
 1. Fixed some errors 
 2. Optimized the code
 3. Added some functions
----------------------------------------------------------  
-
 ---------------------------------------------------------
 Updated on 11 May 2019	
 1. Fixed some errors 
