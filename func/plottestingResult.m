@@ -10,7 +10,7 @@ function plottestingResult(x,y,y_mu,y_var)
 %   y_mu      prediction
 %   y_var     variance of prediction
 %
-% Created on 11st May 2019, by Kepeng Qiu.
+% Created on 5th July 2019, by Kepeng Qiu.
 %-------------------------------------------------------------%
 
 %
@@ -20,7 +20,7 @@ grid on
 
 % 3¦Ò boundary
 f1 = [y_mu(:,1)+2*sqrt(y_var(:,1)); flip(y_mu(:,1)-2*sqrt(y_var(:,1)),1)];
-fill([x; flip(x,1)], f1,[1,0.7,0.7])
+fill([x; flip(x,1)], f1,[1,0.9,0.9])
 
 % testing samples
 plot(x,y,'k:o','LineWidth',1,'MarkerSize',4, ... 
@@ -44,7 +44,9 @@ legend({'3¦Ò boundary','testing samples','prediction'},'FontSize',tlegend , ...
 
 % label settings
 tlabel = tgca*1.1; 
-xlabel('Samples','FontSize',tlabel,'FontWeight','normal','FontName',tfont,'Color','k')
-ylabel('Value','FontSize',tlabel,'FontWeight','normal','FontName',tfont,'Color','k')
+xlabel('Samples','FontSize',tlabel,'FontWeight','normal', ... 
+    'FontName',tfont,'Color','k')
+ylabel('Value','FontSize',tlabel,'FontWeight','normal', ... 
+    'FontName',tfont,'Color','k')
 
 end
