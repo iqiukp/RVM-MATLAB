@@ -50,15 +50,16 @@ plotResult(yt, result)
 
 ```
 
+* relevance vectors
 
 <p align="middle">
   <img src="https://github.com/iqiukp/Relevance-Vector-Machine/blob/master/img/img1.png" width="420">
 </p>
 
-<p align="middle">
-  <img src="https://github.com/iqiukp/Relevance-Vector-Machine/blob/master/img/img2.png" width="420">
-</p>
+* predicted results
 
 <p align="middle">
+  <img src="https://github.com/iqiukp/Relevance-Vector-Machine/blob/master/img/img2.png" width="420">
   <img src="https://github.com/iqiukp/Relevance-Vector-Machine/blob/master/img/img3.png" width="420">
 </p>
+
