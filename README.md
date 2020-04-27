@@ -24,9 +24,6 @@ Email: iqiukp@outlook.com
 
 ## Notices
 
-* Hybrid kernel functions
-  K = w1*K1+w2*K2+...+wn*Kn
-* Parameter optimization
-  Please see docs about "particleswarm" and "ga" for details. 
-  Set the parameters of the optimization algorithm to avoid overfitting or underfitting the model.
+* Hybrid kernel functions: K = w1*K1+w2*K2+...+wn*Kn
+* Parameter optimization: Please see docs about "particleswarm" and "ga" for details. Set the parameters of the optimization algorithm to avoid overfitting or underfitting the model.
 * More details please see: https://www.ilovematlab.cn/forum.php?mod=redirect&goto=findpost&ptid=560474&pid=3634688
