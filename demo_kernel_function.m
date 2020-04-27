@@ -1,5 +1,4 @@
 %{
-
     Examples for kernel function
 
     kernel = Kernel('type', 'gauss', 'width', 2);
@@ -19,7 +18,6 @@ x = rand(30, 5);
 y = rand(30, 5);
 
 kernelmatrix = cell(6, 1);
-
 % compute kernel matrix using gaussian kernel function
 kernel = Kernel('type', 'gauss', 'width', 2);
 kernelmatrix{1, 1} = kernel.getKernelMatrix(x, y);
