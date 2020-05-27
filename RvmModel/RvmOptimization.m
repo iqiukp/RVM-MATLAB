@@ -117,7 +117,7 @@ classdef RvmOptimization < RVM
                     rvm.parameter.kernel(1, k).parameter.(name{1, 1}) = parameter(1, i);
                 end
                 if strcmp(parameterType{1, i}, 'char')
-                    rvm.parameter.weightKernel = parameter(1, i:i+numKernel-1);
+                    rvm.parameter.weight = parameter(1, i:i+numKernel-1);
                 end
             end
         end
