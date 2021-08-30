@@ -1,124 +1,192 @@
-classdef RvmOptimization < RVM
+classdef RvmOptimization < handle
     %{
-        Version 2.0, 19-APR-2020
-        Email: iqiukp@outlook.com
-    %}
+        CLASS DESCRIPTION
 
+        Parameter optimization for RVM model.
+    
+    --------------------------------------------------------------
+    %}
+    
     methods (Static)
-        function rvm = getModel(rvm)
-            if strcmp(rvm.parameter.optimization.method, 'ga')
-                rvm = RvmOptimization.gaOptimize(rvm);
+        function getModel(rvm)
+            RvmOptimizationOption.checkParameter(rvm);
+            objFun = @(parameter) RvmOptimization.getObjValue(parameter, rvm);
+            RvmOptimizationOption.constructParamTable(rvm);
+            switch rvm.optimization.method
+                case 'bayes'
+                    RvmOptimization.bayesopt(rvm, objFun);
+                case 'ga'
+                    RvmOptimization.gaopt(rvm, objFun);
+                case 'pso'
+                    RvmOptimization.psoopt(rvm, objFun);
             end
-            if strcmp(rvm.parameter.optimization.method, 'pso')
-                rvm = RvmOptimization.psoOptimize(rvm);
-            end
+            RvmOptimizationOption.setParameter(rvm);
             rvm.getModel;
         end
         
-        function rvm = gaOptimize(rvm)
+        function bayesopt(rvm, objFun)
+            %{
+                Optimize the parameters using Bayesian optimization.
+                For detailed introduction of the algorithm and parameter
+                setting, please enter 'help bayesopt' in the command line.
+            %}
+            parameter = RvmOptimizationOption.setParameterForBayes(rvm);
+            switch rvm.optimization.display
+                case 'on'
+                    plotFcn_ = {@plotObjectiveModel, @plotMinObjective};
+                case 'off'
+                    plotFcn_ = [];
+            end
+            results = bayesopt(objFun, parameter, 'Verbose', 1,...
+                'MaxObjectiveEvaluations', rvm.optimization.iteration,...
+                'NumSeedPoints', rvm.optimization.point, 'PlotFcn', plotFcn_);
+            % optimization results
+            [rvm.optimization.bestParam, ~, ~] = bestPoint(results);
+        end
+        
+        function gaopt(rvm, objFun)
             %{
                 Optimize the parameters using Genetic Algorithm (GA)
-                For detailed introduction of the algorithm and parameter 
+                For detailed introduction of the algorithm and parameter
                 setting, please enter 'help ga' in the command line.
             %}
-            
-            lb = rvm.parameter.optimization.lb;
-            ub = rvm.parameter.optimization.ub;
-            nvars = rvm.parameter.optimization.numVariable;
-            fun = @RvmOptimization.getObjValue;
-            if ~isfield(rvm.parameter.optimization, 'numPopulation')
-                rvm.parameter.optimization.numPopulation = 2*nvars;
+            seedSize = 10*rvm.optimization.numParameter;
+            [lowerBound_, upperBound_] = RvmOptimizationOption.setParameterForPsoAndGa(rvm);
+            try
+                switch rvm.optimization.display
+                    case 'on'
+                        plotFcn_ = 'gaplotbestf';
+                    case 'off'
+                        plotFcn_ = [];
+                end
+                options = optimoptions('ga', 'PopulationSize', seedSize,...
+                    'MaxGenerations', rvm.optimization.iteration,...
+                    'Display', 'iter', 'PlotFcn', plotFcn_);
+                bestParam_ = ga(objFun, rvm.optimization.numParameter, [], [], [], [],...
+                    lowerBound_, upperBound_, [], [], options);
+            catch % older vision
+                switch rvm.optimization.display
+                    case 'on'
+                        plotFcn_ = @gaplotbestf;
+                    case 'off'
+                        plotFcn_ = [];
+                end
+                options = optimoptions('ga', 'PopulationSize', seedSize,...
+                    'MaxGenerations', rvm.optimization.iteration,...
+                    'Display', 'iter', 'PlotFcn', plotFcn_);
+                bestParam_ = ga(objFun, rvm.optimization.numParameter, [], [], [], [],...
+                    lowerBound_, upperBound_, [], [], options);
             end
-            options = optimoptions('ga','PopulationSize',rvm.parameter.optimization.numPopulation,...
-                'MaxGenerations', rvm.parameter.optimization.maxIter,...
-                'Display', 'iter',  'PlotFcn', 'gaplotbestf');
-            bestx = ga(fun, nvars, [], [], [], [],lb,ub, [], [], options);
-            rvm = RvmOptimization.setParameterValue(rvm, bestx);
+            % optimization results
+            rvm.optimization.bestParam.Variables = bestParam_;
         end
-
         
-        function rvm = psoOptimize(rvm)
+        function psoopt(rvm, objFun)
             %{
                 Optimize the parameters using Particle Swarm Optimization (PSO)
-                For detailed introduction of the algorithm and parameter 
+                For detailed introduction of the algorithm and parameter
                 setting, please enter 'help particleswarm' in the command line.
             %}
-            
-            lb = rvm.parameter.optimization.lb;
-            ub = rvm.parameter.optimization.ub;
-            nvars = rvm.parameter.optimization.numVariable;
-            fun = @RvmOptimization.getObjValue;
-            if ~isfield(rvm.parameter.optimization, 'numPopulation')
-                rvm.parameter.optimization.numPopulation = 2*nvars;
+            seedSize = 10*rvm.optimization.numParameter;
+            switch rvm.optimization.display
+                case 'on'
+                    plotFcn_ = 'pswplotbestf';
+                case 'off'
+                    plotFcn_ = [];
             end
-            options = optimoptions('particleswarm','SwarmSize',rvm.parameter.optimization.numPopulation,...
-                'MaxIterations', rvm.parameter.optimization.maxIter,...
-                'Display', 'iter',  'PlotFcn', 'pswplotbestf');
-            bestx = particleswarm(fun, nvars, lb, ub, options);
-            rvm = RvmOptimization.setParameterValue(rvm, bestx);
+            options = optimoptions('particleswarm', 'SwarmSize', seedSize,...
+                'MaxIterations', rvm.optimization.iteration,...
+                'Display', 'iter', 'PlotFcn', plotFcn_);
+            [lowerBound_, upperBound_] = RvmOptimizationOption.setParameterForPsoAndGa(rvm);
+            bestParam_ = particleswarm(objFun, rvm.optimization.numParameter,...
+                lowerBound_, upperBound_, options);
+            % optimization results
+            rvm.optimization.bestParam.Variables = bestParam_;
         end
-
-        function objValue = getObjValue(parameter)
-            % compute the fitness (here use RMSE)
-            
-            rvm = evalin('base', 'rvm');
-            rvm = RvmOptimization.setParameterValue(rvm, parameter);
-            x_ = rvm.model.x;
-            y_ = rvm.model.y;
-            xt_ = rvm.prediction.xt;
-            yt_ = rvm.prediction.yt;
-            display_ = rvm.parameter.display;
-            rvm.parameter.display = 'off';
-            switch rvm.parameter.optimization.validation
-                case 'Kfolds'
-                    nKfolds = rvm.parameter.optimization.Kfolds;
-                    tmp = rvm.model.x;
-                    tmpLabel = rvm.model.y;
-                    m = size(tmp ,1);
-                    indices = crossvalind('Kfold', m, nKfolds);
-                    objValue_ = Inf(nKfolds, 1);
-                    for i = 1:nKfolds
-                        test = (indices==i);
-                        xt = tmp(test, :);
-                        yt = tmpLabel(test, :);
-                        rvm.model.x = tmp(~test, :);
-                        rvm.model.y = tmpLabel(~test, :);
+        
+        function objValue = getObjValue(parameter, rvm)
+            %{
+                Compute the value of objective function
+            %}
+            rvm_ = copy(rvm);
+            rvm_.display = 'off';
+            switch class(parameter)
+                case 'table' % bayes
+                    rvm_.optimization.bestParam = parameter;
+                case 'double' % ga, pso
+                    rvm_.optimization.bestParam.Variables = parameter;
+            end
+            % parameter setting
+            RvmOptimizationOption.setParameter(rvm_);
+            % cross validation
+            if strcmp(rvm_.crossValidation.switch, 'on')
+                objValue = 1-RvmOptimization.crossvalFunc(rvm_);
+            else
+                % train with all samples
+                rvm_.getModel;
+                rvm_.evaluationMode = 'train';
+                results_ = test(rvm_, rvm_.data, rvm_.label);
+                rvm_.performance = rvm_.evaluateModel(results_);
+                switch rvm_.type
+                    case 'RVR'
+                        objValue = rvm_.performance.RMSE;
+                    case 'RVC'
+                        objValue = 1-rvm_.performance.accuracy;
+                end
+            end
+        end
+        
+        function accuracy = crossvalFunc(rvm)
+            %{
+                Compute the cross validation accuracy
+            %}
+            rng('default')
+            rvm_ = copy(rvm);
+            data_ = rvm_.data;
+            label_ = rvm_.label;
+            rvm_.display = 'off';
+            rvm_.evaluationMode = 'train';
+            cvIndices = crossvalind(rvm.crossValidation.method, ...
+                rvm_.numSamples, rvm.crossValidation.param);
+            switch rvm.crossValidation.method
+                case 'KFold'
+                    accuracy_ = Inf(rvm.crossValidation.param, 1);
+                    for i = 1:rvm.crossValidation.param
+                        testIndices = (cvIndices == i);
+                        testData = data_(testIndices, :);
+                        testLabel = label_(testIndices, :);
+                        rvm_.data = data_(~testIndices, :);
+                        rvm_.label = label_(~testIndices, :);
                         try
-                            rvm.getModel;
+                            rvm_.getModel;
                         catch
                             continue
                         end
-                        rvm.test(xt, yt);
-                        objValue_(i, 1) = rvm.prediction.RMSE;
+                        results = rvm_.test(testData, testLabel);
+                        switch rvm_.type
+                            case 'RVR'
+                                accuracy_(i, 1) = results.performance.RMSE;
+                            case 'RVC'
+                                accuracy_(i, 1) = 1-results.performance.accuracy;
+                        end
+                        
                     end
-                    objValue_(objValue_ == Inf) = [];
-                    objValue = mean(objValue_);
-                case 'all'
-                    rvm.getModel;
-                    objValue = rvm.model.RMSE;
-            end
-            rvm.model.x = x_;
-            rvm.model.y = y_;
-            rvm.prediction.xt = xt_;
-            rvm.prediction.yt = yt_;
-            rvm.parameter.display = display_;
-        end
-
-        function rvm = setParameterValue(rvm, parameter)
-            numParameter = numel(rvm.parameter.optimization.target);
-            numKernel = numel(rvm.parameter.kernel);
-            k = 0;
-            parameterType = cell(1, numParameter);
-            for i = 1:numParameter
-                parameterType{1, i} = class(rvm.parameter.optimization.target{1,i});
-                if strcmp(parameterType{1, i}, 'Kernel')
-                    k = k+1;
-                    name = fieldnames(rvm.parameter.kernel(1, k).parameter);
-                    rvm.parameter.kernel(1, k).parameter.(name{1, 1}) = parameter(1, i);
-                end
-                if strcmp(parameterType{1, i}, 'char')
-                    rvm.parameter.weight = parameter(1, i:i+numKernel-1);
-                end
+                    accuracy_(accuracy_ == Inf) = [];
+                    accuracy = mean(accuracy_);
+                case 'Holdout'
+                    testIndices = (cvIndices == 0);
+                    testData = data_(testIndices, :);
+                    testLabel = label_(testIndices, :);
+                    rvm_.data = data_(~testIndices, :);
+                    rvm_.label = label_(~testIndices, :);
+                    rvm_.getModel;
+                    results = rvm_.test(testData, testLabel);
+                    switch rvm_.type
+                        case 'RVR'
+                            accuracy = results.performance.RMSE;
+                        case 'RVC'
+                            accuracy = 1-results.performance.accuracy;
+                    end
             end
         end
     end

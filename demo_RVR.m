@@ -1,5 +1,5 @@
 %{
-        A demo for regression using RVM with hybrid_kernel
+        A demo for regression using RVM
 %}
 
 clc
@@ -9,7 +9,7 @@ addpath(genpath(pwd))
 
 % sinc funciton
 fun = @(x) sin(abs(x))/abs(x);
-x = linspace(-10,10, 100);
+x = linspace(-10, 10, 100);
 y = arrayfun(fun, x);
 trainData = x';
 trainLabel = y';
@@ -19,14 +19,12 @@ testData = xt';
 testLabel = yt';
 
 % kernel function
-kernel_1 = Kernel('type', 'gaussian', 'gamma', 0.3);
-kernel_2 = Kernel('type', 'polynomial', 'degree', 2);
-kernelWeight = [0.5, 0.5];
+kernel = Kernel('type', 'gaussian', 'gamma', 0.02);
+
 % parameter
 parameter = struct( 'display', 'on',...
                     'type', 'RVR',...
-                    'kernelFunc', [kernel_1, kernel_2],...
-                    'kernelWeight', kernelWeight);
+                    'kernelFunc', kernel);
 rvm = BaseRVM(parameter);
 
 % RVM model training, testing, and visualization
