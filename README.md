@@ -71,6 +71,24 @@ rvm.train(trainData, trainLabel);
 results = rvm.test(testData, testLabel);
 rvm.draw(results)
 ```
+
+results:
+```
+*** RVM model (classification) train finished ***
+running time            = 0.1604 seconds
+iterations              = 20 
+number of samples       = 70 
+number of RVs           = 2 
+ratio of RVs            = 2.8571% 
+accuracy                = 94.2857%
+
+
+*** RVM model (classification) test finished ***
+running time            = 0.0197 seconds
+number of samples       = 30 
+accuracy                = 96.6667%
+```
+
 <p align="center">
   <img width="50%" height="50%" src="https://github.com/iqiukp/Relevance-Vector-Machine/blob/master/imgs/RVC_1.png">
   <img width="50%" height="50%" src="https://github.com/iqiukp/Relevance-Vector-Machine/blob/master/imgs/RVC_2.png">
@@ -87,18 +105,14 @@ close all
 addpath(genpath(pwd))
 
 % sinc funciton
-fun = @(x) sin(abs(x))/abs(x);
-x = linspace(-10, 10, 100);
-y = arrayfun(fun, x);
-trainData = x';
-trainLabel = y';
-xt = linspace(-10, 10, 20);
-yt = arrayfun(fun, xt);
-testData = xt';
-testLabel = yt';
+load sinc_data
+trainData = x;
+trainLabel = y;
+testData = xt;
+testLabel = yt;
 
 % kernel function
-kernel = Kernel('type', 'gaussian', 'gamma', 0.02);
+kernel = Kernel('type', 'gaussian', 'gamma', 0.1);
 
 % parameter
 parameter = struct( 'display', 'on',...
@@ -108,11 +122,32 @@ rvm = BaseRVM(parameter);
 
 % RVM model training, testing, and visualization
 rvm.train(trainData, trainLabel);
-results = rvm.test(trainData, trainLabel);
+results = rvm.test(testData, testLabel);
 rvm.draw(results)
 ```
+results:
+```
+*** RVM model (regression) train finished ***
+running time            = 0.1757 seconds
+iterations              = 76 
+number of samples       = 100 
+number of RVs           = 6 
+ratio of RVs            = 6.0000% 
+RMSE                    = 0.1260
+R2                      = 0.8821
+MAE                     = 0.0999
+
+
+*** RVM model (regression) test finished ***
+running time            = 0.0026 seconds
+number of samples       = 50 
+RMSE                    = 0.1424
+R2                      = 0.8553
+MAE                     = 0.1106
+```
+
 <p align="center">
-  <img width="50%" height="50%" src="https://github.com/iqiukp/Relevance-Vector-Machine/blob/master/imgs/RVR.png">
+  <img width="50%" height="50%" src="https://github.com/iqiukp/Relevance-Vector-Machine/blob/master/imgs/RVR_test.png">
 </p>
 
 
@@ -167,15 +202,11 @@ close all
 addpath(genpath(pwd))
 
 % sinc funciton
-fun = @(x) sin(abs(x))/abs(x);
-x = linspace(-10,10, 100);
-y = arrayfun(fun, x);
-trainData = x';
-trainLabel = y';
-xt = linspace(-10, 10, 20);
-yt = arrayfun(fun, xt);
-testData = xt';
-testLabel = yt';
+load sinc_data
+trainData = x;
+trainLabel = y;
+testData = xt;
+testLabel = yt;
 
 % kernel function
 kernel_1 = Kernel('type', 'gaussian', 'gamma', 0.3);
@@ -190,7 +221,7 @@ rvm = BaseRVM(parameter);
 
 % RVM model training, testing, and visualization
 rvm.train(trainData, trainLabel);
-results = rvm.test(trainData, trainLabel);
+results = rvm.test(testData, testLabel);
 rvm.draw(results)
 ```
 
@@ -237,6 +268,28 @@ rvm.draw(results)
 
 ```
 
+results:
+```
+*** RVM model (classification) train finished ***
+running time            = 13.3356 seconds
+iterations              = 88 
+number of samples       = 70 
+number of RVs           = 4 
+ratio of RVs            = 5.7143% 
+accuracy                = 97.1429%
+Optimized parameter  table
+
+    gaussian_gamma
+    ______________
+
+        7.8261    
+
+*** RVM model (classification) test finished ***
+running time            = 0.0195 seconds
+number of samples       = 70 
+accuracy                = 97.1429%
+```
+
 <p align="center">
   <img width="50%" height="50%" src="https://github.com/iqiukp/Relevance-Vector-Machine/blob/master/imgs/bayes_1.png">
   <img width="50%" height="50%" src="https://github.com/iqiukp/Relevance-Vector-Machine/blob/master/imgs/bayes_2.png">
@@ -248,26 +301,27 @@ rvm.draw(results)
 A demo for RVM model with Parameter Optimization
 
 ```
-lc
+%{
+    A demo for hybrid-kernel RVM model with Parameter Optimization
+%}
+
+
+clc
 clear all
 close all
 addpath(genpath(pwd))
 
-% use fisheriris dataset
-load fisheriris
-inds = ~strcmp(species, 'setosa');
-data_ = meas(inds, 3:4);
-label_ = species(inds);
-cvIndices = crossvalind('HoldOut', length(data_), 0.3);
-trainData = data_(cvIndices, :);
-trainLabel = label_(cvIndices, :);
-testData = data_(~cvIndices, :);
-testLabel = label_(~cvIndices, :);
+% data
+load UCI_data
+trainData = x;
+trainLabel = y;
+testData = xt;
+testLabel = yt;
 
 % kernel function
 kernel_1 = Kernel('type', 'gaussian', 'gamma', 0.5);
 kernel_2 = Kernel('type', 'polynomial', 'degree', 2);
-% kernel_3 = Kernel('type', 'sigmoid', 'gamma', 2);
+
 % parameter optimization
 opt.method = 'bayes'; % bayes, ga, pso
 opt.display = 'on';
@@ -275,17 +329,50 @@ opt.iteration = 30;
 
 % parameter
 parameter = struct( 'display', 'on',...
-                    'type', 'RVC',...
+                    'type', 'RVR',...
                     'kernelFunc', [kernel_1, kernel_2],...
                     'optimization', opt);
 rvm = BaseRVM(parameter);
 
 % RVM model training, testing, and visualization
 rvm.train(trainData, trainLabel);
-results = rvm.test(trainData, trainLabel);
+results = rvm.test(testData, testLabel);
 rvm.draw(results)
 
 ```
+
+results:
+```
+*** RVM model (regression) train finished ***
+running time            = 24.4042 seconds
+iterations              = 377 
+number of samples       = 264 
+number of RVs           = 22 
+ratio of RVs            = 8.3333% 
+RMSE                    = 0.4864
+R2                      = 0.7719
+MAE                     = 0.3736
+Optimized parameter  1×6 table
+
+    gaussian_gamma    polynomial_gamma    polynomial_offset    polynomial_degree    gaussian_weight    polynomial_weight
+    ______________    ________________    _________________    _________________    _______________    _________________
+
+        22.315             13.595               44.83                  6               0.042058             0.95794     
+
+
+
+
+*** RVM model (regression) test finished ***
+running time            = 0.0008 seconds
+number of samples       = 112 
+RMSE                    = 0.7400
+R2                      = 0.6668
+MAE                     = 0.4867
+```
+<p align="center">
+  <img width="50%" height="50%" src="https://github.com/iqiukp/Relevance-Vector-Machine/blob/master/imgs/UCI_data.png">
+</p>
+
 
 ### 07. Cross Validation
 
@@ -302,7 +389,55 @@ For example, the cross-validation of the Holdout method with a ratio of 0.3 is
 parameter = struct( 'display', 'on',...
                     'type', 'RVC',...
                     'kernelFunc', kernel,...
-                    'Holdout', 0.3);
+                    'HoldOut', 0.3);
 ```
 
 ### 08. Other option
+```
+%% custom optimization option
+%{      
+    opt.method = 'bayes'; % bayes, ga, pso
+    opt.display = 'on';
+    opt.iteration = 20;
+    opt.point = 10;
+
+    % gaussian kernel function
+    opt.gaussian.parameterName = {'gamma'};
+    opt.gaussian.parameterType = {'real'};
+    opt.gaussian.lowerBound = 2^-6;
+    opt.gaussian.upperBound = 2^6;
+
+    % laplacian kernel function
+    opt.laplacian.parameterName = {'gamma'};
+    opt.laplacian.parameterType = {'real'};
+    opt.laplacian.lowerBound = 2^-6;
+    opt.laplacian.upperBound = 2^6;
+
+    % polynomial kernel function
+    opt.polynomial.parameterName = {'gamma'; 'offset'; 'degree'};
+    opt.polynomial.parameterType = {'real'; 'real'; 'integer'};
+    opt.polynomial.lowerBound = [2^-6; 2^-6; 1];
+    opt.polynomial.upperBound = [2^6; 2^6; 7];
+
+    % sigmoid kernel function
+    opt.sigmoid.parameterName = {'gamma'; 'offset'};
+    opt.sigmoid.parameterType = {'real'; 'real'};
+    opt.sigmoid.lowerBound = [2^-6; 2^-6];
+    opt.sigmoid.upperBound = [2^6; 2^6];
+%}
+
+%% RVM model parameter
+%{
+    'display'    :   'on', 'off'
+    'type'       :   'RVR', 'RVC'
+    'kernelFunc' :   kernel function
+    'KFolds'     :   cross validation, for example, 5
+    'HoldOut'    :   cross validation, for example, 0.3
+    'freeBasis'  :   'on', 'off'
+    'maxIter'    :   max iteration, for example, 1000
+%}
+```
+
+
+
+
