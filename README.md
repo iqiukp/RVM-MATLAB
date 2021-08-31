@@ -25,14 +25,13 @@
 
 - RVM model for binary classification (RVC) or regression (RVR)
 - Multiple kinds of kernel functions (linear, gaussian, polynomial, sigmoid, laplacian)
-- Hybrid kernel functions
+- Hybrid kernel functions (K = w1*K1+w2*K2+...+wn*Kn)
 - Parameter Optimization using Bayesian optimization, Genetic Algorithm, and Particle Swarm Optimization
 
 ## Notices
 
 - This version of the code is not compatible with the versions lower than R2016b.
 - Detailed applications please see the demonstrations.
-- Hybrid kernel functions: K = w1*K1+w2*K2+...+wn*Kn
 - This code is for reference only.
 
 ## How to use
