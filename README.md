@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="90%" height="90%" src="https://github.com/iqiukp/Relevance-Vector-Machine-RVM/blob/master/imgs/RVR.png">
+  <img width="70%" height="70%" src="https://github.com/iqiukp/Relevance-Vector-Machine-RVM/blob/master/imgs/RVR.png">
 </p>
 
 <h3 align="center">Relevance Vector Machine (RVM)</h3>
@@ -10,7 +10,7 @@
 
 <div align=center>
 
-[![View Support Vector Data Description (SVDD) on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://ww2.mathworks.cn/matlabcentral/fileexchange/69296-support-vector-data-description-svdd)
+[![View Relevance Vector Machine (RVM) on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://www.mathworks.com/matlabcentral/fileexchange/69407-relevance-vector-machine-rvm)
 <img src="https://img.shields.io/github/v/release/iqiukp/Relevance-Vector-Machine-RVM?label=version" />
 <img src="https://img.shields.io/github/repo-size/iqiukp/Relevance-Vector-Machine-RVM" />
 <img src="https://img.shields.io/github/languages/code-size/iqiukp/Relevance-Vector-Machine-RVM" />
@@ -89,8 +89,8 @@ accuracy                = 96.6667%
 ```
 
 <p align="center">
-  <img width="90%" height="90%" src="https://github.com/iqiukp/Relevance-Vector-Machine-RVM/blob/master/imgs/RVC_1.png">
-  <img width="90%" height="90%" src="https://github.com/iqiukp/Relevance-Vector-Machine-RVM/blob/master/imgs/RVC_2.png">
+  <img width="70%" height="70%" src="https://github.com/iqiukp/Relevance-Vector-Machine-RVM/blob/master/imgs/RVC_1.png">
+  <img width="70%" height="70%" src="https://github.com/iqiukp/Relevance-Vector-Machine-RVM/blob/master/imgs/RVC_2.png">
 </p>
 
 
@@ -146,7 +146,7 @@ MAE                     = 0.1106
 ```
 
 <p align="center">
-  <img width="90%" height="90%" src="https://github.com/iqiukp/Relevance-Vector-Machine-RVM/blob/master/imgs/RVR_test.png">
+  <img width="70%" height="70%" src="https://github.com/iqiukp/Relevance-Vector-Machine-RVM/blob/master/imgs/RVR_test.png">
 </p>
 
 
@@ -193,7 +193,7 @@ kernelMatrix =
 
 ### 04. Hybrid kernel
 
-A demo for regression using RVM with hybrid_kernel (K = w1*K1+w2*K2+...+wn*Kn)
+A demo for regression using RVM with hybrid_kernel (K =w1×K1+w2×K2+...+wn×Kn)
 ```
 clc
 clear all
@@ -290,8 +290,8 @@ accuracy                = 97.1429%
 ```
 
 <p align="center">
-  <img width="90%" height="90%" src="https://github.com/iqiukp/Relevance-Vector-Machine-RVM/blob/master/imgs/bayes_1.png">
-  <img width="90%" height="90%" src="https://github.com/iqiukp/Relevance-Vector-Machine-RVM/blob/master/imgs/bayes_2.png">
+  <img width="70%" height="70%" src="https://github.com/iqiukp/Relevance-Vector-Machine-RVM/blob/master/imgs/bayes_1.png">
+  <img width="70%" height="70%" src="https://github.com/iqiukp/Relevance-Vector-Machine-RVM/blob/master/imgs/bayes_2.png">
 </p>
 
 
@@ -369,7 +369,7 @@ R2                      = 0.6668
 MAE                     = 0.4867
 ```
 <p align="center">
-  <img width="90%" height="90%" src="https://github.com/iqiukp/Relevance-Vector-Machine-RVM/blob/master/imgs/UCI_data.png">
+  <img width="70%" height="70%" src="https://github.com/iqiukp/Relevance-Vector-Machine-RVM/blob/master/imgs/UCI_data.png">
 </p>
 
 
