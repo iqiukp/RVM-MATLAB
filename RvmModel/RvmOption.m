@@ -110,7 +110,7 @@ classdef RvmOption < handle
             name_ = fieldnames(parameter);
             for i = 1:size(name_, 1)
                 switch name_{i}
-                    case {'Holdout', 'KFold', 'Leaveout'}
+                    case {'HoldOut', 'KFold'}
                         obj.crossValidation.switch = 'on';
                         obj.crossValidation.method = name_{i, 1};
                         obj.crossValidation.param = parameter.(name_{i, 1});
@@ -141,7 +141,12 @@ classdef RvmOption < handle
         
         function displayTrain(obj)
             fprintf('\n')
-            fprintf('*** RVM model training finished ***\n')
+            switch obj.type
+                case 'RVR'
+                    fprintf('*** RVM model (regression) train finished ***\n')
+                case 'RVC'
+                    fprintf('*** RVM model (classification) train finished ***\n')
+            end
             fprintf('running time            = %.4f seconds\n', obj.runningTime)
             fprintf('iterations              = %d \n', obj.numIterations)
             fprintf('number of samples       = %d \n', obj.numSamples)
@@ -154,16 +159,6 @@ classdef RvmOption < handle
                     fprintf('MAE                     = %.4f\n', obj.performance.MAE)
                 case 'RVC'
                     fprintf('accuracy                = %.4f%%\n', 100*obj.performance.accuracy)
-                    if strcmp(obj.crossValidation.switch, 'on')
-                        tmp_1 = '(';
-                        tmp_2 = obj.crossValidation.method;
-                        tmp_3 = ', ';
-                        tmp_4 = num2str(obj.crossValidation.param);
-                        tmp_5 = ')';
-                        tmp_ = [tmp_1, tmp_2, tmp_3, tmp_4, tmp_5];
-                        tmp = ['CV accuracy ', tmp_, '  = %.4f%%\n'];
-                        fprintf(tmp, 100*obj.crossValidation.accuracy)
-                    end
             end
             if strcmp(obj.optimization.switch, 'on')
                 fprintf('Optimized parameter')
@@ -178,7 +173,12 @@ classdef RvmOption < handle
 
         function displayTest(obj)
             fprintf('\n')
-            fprintf('*** RVM model test finished ***\n')
+            switch obj.type
+                case 'RVR'
+                    fprintf('*** RVM model (regression) test finished ***\n')
+                case 'RVC'
+                    fprintf('*** RVM model (classification) test finished ***\n')
+            end
             fprintf('running time            = %.4f seconds\n', obj.runningTime)
             fprintf('number of samples       = %d \n', obj.numSamples)
             switch obj.type

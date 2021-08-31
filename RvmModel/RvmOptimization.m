@@ -120,12 +120,13 @@ classdef RvmOptimization < handle
             RvmOptimizationOption.setParameter(rvm_);
             % cross validation
             if strcmp(rvm_.crossValidation.switch, 'on')
-                objValue = 1-RvmOptimization.crossvalFunc(rvm_);
+                objValue = RvmOptimization.crossvalFunc(rvm_);
             else
                 % train with all samples
                 rvm_.getModel;
+                evaluationMode_ = rvm_.evaluationMode;
                 rvm_.evaluationMode = 'train';
-                results_ = test(rvm_, rvm_.data, rvm_.label);
+                results_ = test(rvm_, rvm_.data, rvm_.label_);
                 rvm_.performance = rvm_.evaluateModel(results_);
                 switch rvm_.type
                     case 'RVR'
@@ -133,6 +134,7 @@ classdef RvmOptimization < handle
                     case 'RVC'
                         objValue = 1-rvm_.performance.accuracy;
                 end
+                rvm_.evaluationMode = evaluationMode_;
             end
         end
         
@@ -143,7 +145,7 @@ classdef RvmOptimization < handle
             rng('default')
             rvm_ = copy(rvm);
             data_ = rvm_.data;
-            label_ = rvm_.label;
+            label_ = rvm_.label_;
             rvm_.display = 'off';
             rvm_.evaluationMode = 'train';
             cvIndices = crossvalind(rvm.crossValidation.method, ...
@@ -156,7 +158,7 @@ classdef RvmOptimization < handle
                         testData = data_(testIndices, :);
                         testLabel = label_(testIndices, :);
                         rvm_.data = data_(~testIndices, :);
-                        rvm_.label = label_(~testIndices, :);
+                        rvm_.label_ = label_(~testIndices, :);
                         try
                             rvm_.getModel;
                         catch
@@ -173,12 +175,12 @@ classdef RvmOptimization < handle
                     end
                     accuracy_(accuracy_ == Inf) = [];
                     accuracy = mean(accuracy_);
-                case 'Holdout'
+                case 'HoldOut'
                     testIndices = (cvIndices == 0);
                     testData = data_(testIndices, :);
                     testLabel = label_(testIndices, :);
                     rvm_.data = data_(~testIndices, :);
-                    rvm_.label = label_(~testIndices, :);
+                    rvm_.label_ = label_(~testIndices, :);
                     rvm_.getModel;
                     results = rvm_.test(testData, testLabel);
                     switch rvm_.type

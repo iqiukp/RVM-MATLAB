@@ -68,7 +68,12 @@ classdef BaseRVM < handle & matlab.mixin.Copyable
             else
                 getModel(obj);
             end
-            
+%            % cross validation
+%             if strcmp(obj.crossValidation.switch, 'on')
+%                 rvm_ = copy(obj);
+%                 obj.crossValidation.accuracy = RvmOptimization.crossvalFunc(rvm_);
+%             end
+
             obj.runningTime = toc(tStart);
             % display
             if strcmp(obj.display, 'on')
@@ -148,7 +153,7 @@ classdef BaseRVM < handle & matlab.mixin.Copyable
             evaluationMode_ = obj.evaluationMode;
             obj.display = 'off';
             obj.evaluationMode = 'train';
-            results_ = test(obj, obj.data, obj.label);
+            results_ = test(obj, obj.data, obj.label_);
             obj.display = display_;
             obj.evaluationMode = evaluationMode_;
             obj.performance = evaluateModel(obj, results_);
@@ -158,9 +163,10 @@ classdef BaseRVM < handle & matlab.mixin.Copyable
             tStart = tic;
             results.type = obj.type;
             results.label = label;
+            results.label_ = label;
             results.data = data;
             results.classNames = unique(label);
-            if strcmp(obj.type, 'RVC')
+            if strcmp(obj.type, 'RVC') && strcmp(obj.evaluationMode,'test')
                 results.label_ = RvmOption.checkLabel(results, label);
             end
             results.numSamples = size(results.data, 1);

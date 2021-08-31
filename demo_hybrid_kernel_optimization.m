@@ -8,21 +8,17 @@ clear all
 close all
 addpath(genpath(pwd))
 
-% use fisheriris dataset
-load fisheriris
-inds = ~strcmp(species, 'setosa');
-data_ = meas(inds, 3:4);
-label_ = species(inds);
-cvIndices = crossvalind('HoldOut', length(data_), 0.3);
-trainData = data_(cvIndices, :);
-trainLabel = label_(cvIndices, :);
-testData = data_(~cvIndices, :);
-testLabel = label_(~cvIndices, :);
+% data
+load UCI_data
+trainData = x;
+trainLabel = y;
+testData = xt;
+testLabel = yt;
 
 % kernel function
 kernel_1 = Kernel('type', 'gaussian', 'gamma', 0.5);
 kernel_2 = Kernel('type', 'polynomial', 'degree', 2);
-% kernel_3 = Kernel('type', 'sigmoid', 'gamma', 2);
+
 % parameter optimization
 opt.method = 'bayes'; % bayes, ga, pso
 opt.display = 'on';
@@ -30,14 +26,12 @@ opt.iteration = 30;
 
 % parameter
 parameter = struct( 'display', 'on',...
-                    'type', 'RVC',...
+                    'type', 'RVR',...
                     'kernelFunc', [kernel_1, kernel_2],...
                     'optimization', opt);
 rvm = BaseRVM(parameter);
 
 % RVM model training, testing, and visualization
 rvm.train(trainData, trainLabel);
-results = rvm.test(trainData, trainLabel);
+results = rvm.test(testData, testLabel);
 rvm.draw(results)
-
-

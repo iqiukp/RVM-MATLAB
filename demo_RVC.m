@@ -31,6 +31,3 @@ rvm = BaseRVM(parameter);
 rvm.train(trainData, trainLabel);
 results = rvm.test(testData, testLabel);
 rvm.draw(results)
-
-
-
