@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="70%" height="70%" src="https://github.com/iqiukp/Relevance-Vector-Machine-RVM/blob/master/imgs/RVR.png">
+  <img width="90%" height="90%" src="https://github.com/iqiukp/Relevance-Vector-Machine-RVM/blob/master/imgs/RVR.png">
 </p>
 
 <h3 align="center">Relevance Vector Machine (RVM)</h3>
@@ -89,8 +89,8 @@ accuracy                = 96.6667%
 ```
 
 <p align="center">
-  <img width="50%" height="50%" src="https://github.com/iqiukp/Relevance-Vector-Machine-RVM/blob/master/imgs/RVC_1.png">
-  <img width="50%" height="50%" src="https://github.com/iqiukp/Relevance-Vector-Machine-RVM/blob/master/imgs/RVC_2.png">
+  <img width="90%" height="90%" src="https://github.com/iqiukp/Relevance-Vector-Machine-RVM/blob/master/imgs/RVC_1.png">
+  <img width="90%" height="90%" src="https://github.com/iqiukp/Relevance-Vector-Machine-RVM/blob/master/imgs/RVC_2.png">
 </p>
 
 
@@ -146,7 +146,7 @@ MAE                     = 0.1106
 ```
 
 <p align="center">
-  <img width="50%" height="50%" src="https://github.com/iqiukp/Relevance-Vector-Machine-RVM/blob/master/imgs/RVR_test.png">
+  <img width="90%" height="90%" src="https://github.com/iqiukp/Relevance-Vector-Machine-RVM/blob/master/imgs/RVR_test.png">
 </p>
 
 
@@ -290,8 +290,8 @@ accuracy                = 97.1429%
 ```
 
 <p align="center">
-  <img width="50%" height="50%" src="https://github.com/iqiukp/Relevance-Vector-Machine-RVM/blob/master/imgs/bayes_1.png">
-  <img width="50%" height="50%" src="https://github.com/iqiukp/Relevance-Vector-Machine-RVM/blob/master/imgs/bayes_2.png">
+  <img width="90%" height="90%" src="https://github.com/iqiukp/Relevance-Vector-Machine-RVM/blob/master/imgs/bayes_1.png">
+  <img width="90%" height="90%" src="https://github.com/iqiukp/Relevance-Vector-Machine-RVM/blob/master/imgs/bayes_2.png">
 </p>
 
 
@@ -369,7 +369,7 @@ R2                      = 0.6668
 MAE                     = 0.4867
 ```
 <p align="center">
-  <img width="50%" height="50%" src="https://github.com/iqiukp/Relevance-Vector-Machine-RVM/blob/master/imgs/UCI_data.png">
+  <img width="90%" height="90%" src="https://github.com/iqiukp/Relevance-Vector-Machine-RVM/blob/master/imgs/UCI_data.png">
 </p>
 
 
