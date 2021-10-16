@@ -16,7 +16,7 @@ classdef RvmOption < handle
             switch class(obj.classNames)
                 case 'double'
                     label_(label==obj.classNames(1)) = 0;
-                    label_(label==obj.classNames(1)) = 1;
+                    label_(label==obj.classNames(2)) = 1;
                 case 'cell'
                     label_(strcmp(label, obj.classNames{1})) = 0;
                     label_(strcmp(label, obj.classNames{2})) = 1;
@@ -57,7 +57,7 @@ classdef RvmOption < handle
                 '-', 'LineWidth', 2, 'color', [254, 67, 101]/255)
             plot(index, results.predictedLabel,...
                 '-','LineWidth', 2,'color', [0, 114, 189]/255)
-            legend('3¦Ò boundary', 'Real value', 'Predicted value')
+            legend('3ï¿½ï¿½ boundary', 'Real value', 'Predicted value')
             xlabel('Observations');
             ylabel('Predictions');
         end
