@@ -34,6 +34,31 @@
 - Detailed applications please see the demonstrations.
 - This code is for reference only.
 
+## Citation
+```
+@article{tipping2001sparse,
+  title={Sparse Bayesian learning and the relevance vector machine},
+  author={Tipping, Michael E},
+  journal={Journal of machine learning research},
+  volume={1},
+  number={Jun},
+  pages={211--244},
+  year={2001}
+}
+```
+```
+@article{qiu2021soft,
+  title={Soft sensor development based on kernel dynamic time warping and a relevant vector machine for unequal-length batch processes},
+  author={Qiu, Kepeng and Wang, Jianlin and Wang, Rutong and Guo, Yongqi and Zhao, Liqiang},
+  journal={Expert Systems with Applications},
+  volume={182},
+  pages={115223},
+  year={2021},
+  publisher={Elsevier}
+}
+```
+
+
 ## How to use
 
 ### 01. Classification using RVM (RVC)
