@@ -35,7 +35,7 @@ rvm = BaseRVM(parameter);
 
 % RVM model training, testing, and visualization
 rvm.train(trainData, trainLabel);
-results = rvm.test(trainData, trainLabel);
+results = rvm.test(testData, testLabel);
 rvm.draw(results)
 
 
