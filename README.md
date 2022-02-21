@@ -64,7 +64,7 @@
 ### 01. Classification using RVM (RVC)
 
 A demo for classification using RVM
-```
+```MATLAB
 clc
 clear all
 close all
@@ -97,7 +97,7 @@ rvm.draw(results)
 ```
 
 results:
-```
+```MATLAB
 *** RVM model (classification) train finished ***
 running time            = 0.1604 seconds
 iterations              = 20 
@@ -122,7 +122,7 @@ accuracy                = 96.6667%
 ### 02. Regression using RVM (RVR)
 
 A demo for regression using RVM
-```
+```MATLAB
 clc
 clear all
 close all
@@ -150,7 +150,7 @@ results = rvm.test(testData, testLabel);
 rvm.draw(results)
 ```
 results:
-```
+```MATLAB
 *** RVM model (regression) train finished ***
 running time            = 0.1757 seconds
 iterations              = 76 
@@ -178,7 +178,7 @@ MAE                     = 0.1106
 ### 03. Kernel funcions
 
 A class named ***Kernel*** is defined to compute kernel function matrix.
-```
+```MATLAB
 %{
         type   -
         
@@ -200,7 +200,7 @@ kernel = Kernel('type', 'sigmoid', 'gamma', value);
 kernel = Kernel('type', 'laplacian', 'gamma', value);
 ```
 For example, compute the kernel matrix between **X** and **Y**
-```
+```MATLAB
 X = rand(5, 2);
 Y = rand(3, 2);
 kernel = Kernel('type', 'gaussian', 'gamma', 2);
@@ -219,7 +219,7 @@ kernelMatrix =
 ### 04. Hybrid kernel
 
 A demo for regression using RVM with hybrid_kernel (K =w1×K1+w2×K2+...+wn×Kn)
-```
+```MATLAB
 clc
 clear all
 close all
@@ -253,7 +253,7 @@ rvm.draw(results)
 
 A demo for RVM model with Parameter Optimization
 
-```
+```MATLAB
 clc
 clear all
 close all
@@ -293,7 +293,7 @@ rvm.draw(results)
 ```
 
 results:
-```
+```MATLAB
 *** RVM model (classification) train finished ***
 running time            = 13.3356 seconds
 iterations              = 88 
@@ -324,7 +324,7 @@ accuracy                = 97.1429%
 
 A demo for RVM model with Parameter Optimization
 
-```
+```MATLAB
 %{
     A demo for hybrid-kernel RVM model with Parameter Optimization
 %}
@@ -366,7 +366,7 @@ rvm.draw(results)
 ```
 
 results:
-```
+```MATLAB
 *** RVM model (regression) train finished ***
 running time            = 24.4042 seconds
 iterations              = 377 
@@ -402,14 +402,14 @@ MAE                     = 0.4867
 
 In this code, two cross-validation methods are supported: 'K-Folds' and 'Holdout'.
 For example, the cross-validation of 5-Folds is
-```
+```MATLAB
 parameter = struct( 'display', 'on',...
                     'type', 'RVC',...
                     'kernelFunc', kernel,...
                     'KFold', 5);
 ```
 For example, the cross-validation of the Holdout method with a ratio of 0.3 is 
-```
+```MATLAB
 parameter = struct( 'display', 'on',...
                     'type', 'RVC',...
                     'kernelFunc', kernel,...
@@ -417,7 +417,7 @@ parameter = struct( 'display', 'on',...
 ```
 
 ### 08. Other option
-```
+```MATLAB
 %% custom optimization option
 %{      
     opt.method = 'bayes'; % bayes, ga, pso
